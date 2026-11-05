@@ -29,10 +29,14 @@ async function MyBooksList() {
   let myBooks: MyBook[] = [];
   let failed = false;
 
+  //This page couldn’t load becuse of add bellow code 
   try {
     const res = await fetch(`${API_URL}/books`, {
       cache: "no-store",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
 
     if (!res.ok) throw new Error("Failed to fetch books");

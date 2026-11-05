@@ -26,7 +26,10 @@ async function getMyBorrows(email: string, token: string): Promise<BorrowItem[]>
     const params = new URLSearchParams({ email });
     const res = await fetch(`${API_URL}/borrows?${params.toString()}`, {
       cache: "no-store",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
     if (!res.ok) return [];
     return res.json();
